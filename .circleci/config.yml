@@ -25,5 +25,5 @@ workflows:
       - parallel-job-2
       - exit-workflow-job:
           requires:
-            - parallel-job-0
             - parallel-job-1
+            - parallel-job-2
