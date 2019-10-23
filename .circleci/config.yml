@@ -1,0 +1,14 @@
+version: 2.1
+
+jobs:
+  parallel-job-1:
+    docker:
+      - image: circleci/node
+    steps:
+      - run: exit 0 #this job exited successfully
+
+workflows:
+  version: 2
+  run-parallel-jobs:
+    jobs:
+      - parallel-job-1
