@@ -11,8 +11,8 @@ jobs:
       - image: circleci/node
     steps:
       - run:
-          - command: echo "failed intentionally"
-          - when: on_fail
+          command: echo "failed intentionally"
+          when: on_fail
       - run: exit 1 #this job failed
   exit-workflow-job:
     docker:
