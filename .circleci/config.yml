@@ -10,7 +10,15 @@ jobs:
     docker:
       - image: circleci/node
     steps:
-      - run: exit 1 #this job failed
+      - run: exit 0 #this job failed
+  exit-workflow-job:
+    docker:
+      - image: circleci/node
+    requires:
+      - parallel-job-0
+      - parallel-job-1
+    steps:
+      - run: echo "passed parallel jobs and continued this workflow"
 
 workflows:
   version: 2
@@ -18,3 +26,4 @@ workflows:
     jobs:
       - parallel-job-1
       - parallel-job-2
+      - exit-workflow-job
