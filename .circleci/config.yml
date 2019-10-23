@@ -12,8 +12,7 @@ jobs:
     steps:
       - run:
           - command: echo "failed intentionally"
-          - when:
-              condition: on_fail
+          - when: on_fail
       - run: exit 1 #this job failed
   exit-workflow-job:
     docker:
