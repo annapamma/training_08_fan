@@ -6,9 +6,15 @@ jobs:
       - image: circleci/node
     steps:
       - run: exit 0 #this job exited successfully
+  parallel-job-2:
+    docker:
+      - image: circleci/node
+    steps:
+      - run: exit 1 #this job failed
 
 workflows:
   version: 2
   run-parallel-jobs:
     jobs:
       - parallel-job-1
+      - parallel-job-2
