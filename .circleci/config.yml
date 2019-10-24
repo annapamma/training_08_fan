@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build: # build step
+  pull-before-build: # build step
     machine: true
     steps:
       - checkout
@@ -16,4 +16,4 @@ workflows:
   version: 2
   build-then-push:
     jobs:
-      - build
+      - pull-before-build
