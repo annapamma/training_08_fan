@@ -9,7 +9,7 @@ jobs:
   parallel-job-2: # build step
     machine: true
     steps:
-      - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder
+      - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder .
       - run: exit 0 #this job failed
   continue-workflow-job:
     docker:
