@@ -1,46 +1,17 @@
 version: 2.1
 
 jobs:
-  parallel-job-1:
-    docker:
-      - image: circleci/node
-    steps:
-      - run: exit 0 #this job exited successfully
-  parallel-job-2: # build step
-    machine: true
-    steps:
-      - checkout
-      - run: |
-          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-      - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder .
-      - run: docker push annacircleci/remotecachedemo:uniqueid-builder
-  follows-parallel-job-2:
-      machine: true
-      steps:
-        - checkout
-        - run: |
-            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-        - run: docker pull annacircleci/remotecachedemo:uniqueid-builder
-        - run: docker build --cache-from annacircleci/remotecachedemo:uniqueid-builder -t annacircleci/remotecachedemo:uniqueid-latest .
-        - run: docker push annacircleci/remotecachedemo:uniqueid-latest
-  continue-workflow-job:
-    docker:
-      - image: circleci/node
-    steps:
-      - run: echo "passed parallel jobs" # continue the workflow from here
+  build: # build step
+    pull-then-build: # if your build step passes, this will run
+        machine: true
+        steps:
+          - checkout
+          - run: |
+              echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+          - run: docker pull annacircleci/remotecachedemo:uniqueid-builder
+          - run: docker build --cache-from annacircleci/remotecachedemo:uniqueid-builder -t annacircleci/remotecachedemo:uniqueid-latest -t annacircleci/remotecachedemo:uniqueid-builder.
+          - run: docker push annacircleci/remotecachedemo:uniqueid-builder
+          - run: docker push annacircleci/remotecachedemo:uniqueid-latest
 
 workflows:
   version: 2
-  run-parallel-jobs:
-    jobs:
-      - parallel-job-1
-      - parallel-job-2:
-          context: remotecachedemo
-      - follows-parallel-job-2:
-          context: remotecachedemo
-          requires:
-            - parallel-job-2
-      - continue-workflow-job:
-          requires:
-            - parallel-job-1
-            - parallel-job-2
