@@ -2,16 +2,15 @@ version: 2.1
 
 jobs:
   build: # build step
-    pull-then-build: # if your build step passes, this will run
-        machine: true
-        steps:
-          - checkout
-          - run: |
-              echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-          - run: docker pull annacircleci/remotecachedemo:uniqueid-builder
-          - run: docker build --cache-from annacircleci/remotecachedemo:uniqueid-builder -t annacircleci/remotecachedemo:uniqueid-latest -t annacircleci/remotecachedemo:uniqueid-builder.
-          - run: docker push annacircleci/remotecachedemo:uniqueid-builder
-          - run: docker push annacircleci/remotecachedemo:uniqueid-latest
+    machine: true
+    steps:
+      - checkout
+      - run: |
+          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+      - run: docker pull annacircleci/remotecachedemo:uniqueid-builder # run docker pull on a builder image
+      - run: docker build --cache-from annacircleci/remotecachedemo:uniqueid-builder -t annacircleci/remotecachedemo:uniqueid-latest -t annacircleci/remotecachedemo:uniqueid-builder .
+      - run: docker push annacircleci/remotecachedemo:uniqueid-builder # push the most recent image for pulling next time
+      - run: docker push annacircleci/remotecachedemo:uniqueid-latest
 
 workflows:
   version: 2
