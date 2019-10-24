@@ -15,9 +15,11 @@ jobs:
       - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder .
       - run: docker push annacircleci/remotecachedemo:uniqueid-builder
   follows-parallel-job-2:
-      - machine: true
-      - run: docker pull annacircleci/remotecachedemo:uniqueid-builder
-      - run: docker build --cache-from annacircleci/remotecachedemo:uniqueid-builder -t annacircleci/remotecachedemo:uniqueid-latest .
+      machine: true
+      steps:
+        - checkout
+        - run: docker pull annacircleci/remotecachedemo:uniqueid-builder
+        - run: docker build --cache-from annacircleci/remotecachedemo:uniqueid-builder -t annacircleci/remotecachedemo:uniqueid-latest .
   continue-workflow-job:
     docker:
       - image: circleci/node
