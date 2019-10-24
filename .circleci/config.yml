@@ -33,6 +33,10 @@ workflows:
       - parallel-job-1
       - parallel-job-2:
           context: remotecachedemo
+      - follows-parallel-job-2:
+          context: remotecachedemo
+          requires:
+            - parallel-job-2
       - continue-workflow-job:
           requires:
             - parallel-job-1
