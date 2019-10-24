@@ -8,7 +8,6 @@ jobs:
       - run: exit 0 #this job exited successfully
   parallel-job-2: # build step
     machine: true
-    context: remotecachedemo
     steps:
       - checkout
       - run: echo "$DOCKER_USER"
@@ -27,7 +26,8 @@ workflows:
   run-parallel-jobs:
     jobs:
       - parallel-job-1
-      - parallel-job-2
+      - parallel-job-2:
+          context: remotecachedemo
       - continue-workflow-job:
           requires:
             - parallel-job-1
