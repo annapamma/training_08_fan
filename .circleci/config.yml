@@ -10,11 +10,11 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: echo "$DOCKER_USER"
-#      - run: |
-#          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-#      - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder .
-#      - run: docker push annacircleci/remotecachedemo:uniqueid-builder
+#      - run: echo "$DOCKER_USER"
+      - run: |
+          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+      - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder .
+      - run: docker push annacircleci/remotecachedemo:uniqueid-builder
   continue-workflow-job:
     docker:
       - image: circleci/node
