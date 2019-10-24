@@ -7,10 +7,10 @@ jobs:
     steps:
       - run: exit 0 #this job exited successfully
   parallel-job-2: # build step
-    docker:
-      - image: circleci/node
+    machine: true
     steps:
-      - run: exit 1 #this job failed
+      - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder
+      - run: exit 0 #this job failed
   continue-workflow-job:
     docker:
       - image: circleci/node
