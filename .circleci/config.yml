@@ -1,5 +1,13 @@
 version: 2.1
 
+commands:
+  run-always:
+    steps:
+      - run:
+          name: Always
+          command: echo "command ran no matter what failed before me"
+          when: always
+
 jobs:
   parallel-job-1:
     docker:
@@ -11,12 +19,12 @@ jobs:
       - image: circleci/node
     steps:
       - run: exit 1 #this job failed
+      - run-always
   continue-workflow-job:
     docker:
       - image: circleci/node
     steps:
       - run: echo "passed parallel jobs" # continue the workflow from here
-    when: always
 
 workflows:
   version: 2
