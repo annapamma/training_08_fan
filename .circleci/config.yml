@@ -16,7 +16,7 @@ jobs:
       - image: circleci/node
     steps:
       - run: echo "passed parallel jobs" # continue the workflow from here
-#    when: always
+    when: always
 
 workflows:
   version: 2
@@ -24,8 +24,7 @@ workflows:
     jobs:
       - parallel-job-1
       - parallel-job-2
-      - continue-workflow-job
-#      - :
-#          requires:
-#            - parallel-job-1
-#            - parallel-job-2
+      - continue-workflow-job:
+          requires:
+            - parallel-job-1
+            - parallel-job-2
