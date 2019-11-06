@@ -1,20 +1,31 @@
 version: 2.1
 
 jobs:
-  pull-before-build: # build step
-    machine: true
+  parallel-job-1:
+    docker:
+      - image: circleci/node
     steps:
-      - checkout
-      - run: |
-          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-      - run: docker pull annacircleci/remotecachedemo:uniqueid-builder # run docker pull on a builder image
-      - run: docker build --cache-from annacircleci/remotecachedemo:uniqueid-builder -t annacircleci/remotecachedemo:uniqueid-latest -t annacircleci/remotecachedemo:uniqueid-builder .
-      - run: docker push annacircleci/remotecachedemo:uniqueid-builder # push the most recent image for pulling next time
-      - run: docker push annacircleci/remotecachedemo:uniqueid-latest
+      - run: exit 0 #this job exited successfully
+  parallel-job-2: # build step
+    docker:
+      - image: circleci/node
+    steps:
+      - run: exit 1 #this job failed
+  continue-workflow-job:
+    docker:
+      - image: circleci/node
+    steps:
+      - run: echo "passed parallel jobs" # continue the workflow from here
+#    when: always
 
 workflows:
   version: 2
-  build-then-push:
+  run-parallel-jobs:
     jobs:
-      - pull-before-build:
-          context: remotecachedemo
+      - parallel-job-1
+      - parallel-job-2
+      - continue-workflow-job
+#      - :
+#          requires:
+#            - parallel-job-1
+#            - parallel-job-2
