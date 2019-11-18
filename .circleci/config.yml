@@ -34,6 +34,8 @@ workflows:
           filters:
             tags:
               only: /DOESNOTEXIST/
+            branches:
+              ignore: /.*/
 #      - parallel-job-2
 #      - continue-workflow-job:
 #          requires:
