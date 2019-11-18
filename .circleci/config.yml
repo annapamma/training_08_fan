@@ -30,13 +30,16 @@ workflows:
   version: 2
   run-parallel-jobs:
     jobs:
-      - parallel-job-1
-      - parallel-job-2
-      - continue-workflow-job:
-          requires:
-            - parallel-job-1
-            - parallel-job-2
+      - parallel-job-1:
           filters:
             tags:
-              only: /^v.*/
+              only: DOESNOTEXIST
+#      - parallel-job-2
+#      - continue-workflow-job:
+#          requires:
+#            - parallel-job-1
+#            - parallel-job-2
+#          filters:
+#            tags:
+#              only: /cci*/
 # did i fix this?
