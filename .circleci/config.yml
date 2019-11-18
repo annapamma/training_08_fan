@@ -33,7 +33,7 @@ workflows:
       - parallel-job-1:
           filters:
             tags:
-              only: DOESNOTEXIST
+              only: /DOESNOTEXIST/
 #      - parallel-job-2
 #      - continue-workflow-job:
 #          requires:
