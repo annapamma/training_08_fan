@@ -18,7 +18,7 @@ jobs:
     docker:
       - image: circleci/node
     steps:
-      - run: exit 1 #this job failed
+      - run: exit 0 #this job failed
       - run-always
   continue-workflow-job:
     docker:
