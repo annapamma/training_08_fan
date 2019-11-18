@@ -33,7 +33,7 @@ workflows:
       - parallel-job-1:
           filters:
             tags:
-              only: /cci/
+              only: cci
             branches:
               ignore: /.*/
 #      - parallel-job-2
