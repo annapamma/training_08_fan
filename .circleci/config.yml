@@ -36,5 +36,7 @@ workflows:
           requires:
             - parallel-job-1
             - parallel-job-2
-
+          filters:
+            tags:
+              only: /^v.*/
 # did i fix this?
