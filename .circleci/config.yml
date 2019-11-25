@@ -1,25 +1,32 @@
 version: 2.1
 
-commands:
-  run-always:
-    steps:
-      - run:
-          name: Always
-          command: echo "command ran no matter what failed before me"
-          when: always
-
 jobs:
-  parallel-job-1:
-    docker:
-      - image: circleci/node
-    steps:
-      - run: exit 0 #this job exited successfully
-  parallel-job-2: # build step
-    docker:
-      - image: circleci/node
-    steps:
-      - run: exit 0 #this job failed
-      - run-always
+#  parallel-job-1:
+#    docker:
+#      - image: circleci/node
+#    steps:
+#      - run: exit 0 #this job exited successfully
+#  parallel-job-2: # build step
+#    macos:
+#      xcode: "9.0"
+#    steps:
+#      - checkout
+#      - run: |
+#          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+#      - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder .
+#      - run: docker push annacircleci/remotecachedemo:uniqueid-builder
+  follows-parallel-job-2: # if your build step passes, this will run
+      macos:
+        xcode: "9.0"
+      steps:
+        - checkout
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - run: |
+            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+        - run: docker pull annacircleci/remotecachedemo:uniqueid-builder
+        - run: docker build -t annacircleci/remotecachedemo:uniqueid-latest .
+        - run: docker push annacircleci/remotecachedemo:uniqueid-latest
   continue-workflow-job:
     docker:
       - image: circleci/node
@@ -30,18 +37,14 @@ workflows:
   version: 2
   run-parallel-jobs:
     jobs:
-      - parallel-job-1:
-          filters:
-            tags:
-              only: /cci.*/
-            branches:
-              ignore: /.*/
-#      - parallel-job-2
-#      - continue-workflow-job:
-#          requires:
-#            - parallel-job-1
-#            - parallel-job-2
-#          filters:
-#            tags:
-#              only: /cci*/
-# did i fix this?
+      - parallel-job-1
+      - parallel-job-2:
+          context: remotecachedemo
+      - follows-parallel-job-2:
+          context: remotecachedemo
+          requires:
+            - parallel-job-1 # require your test job to pass before pushing the image
+      - continue-workflow-job:
+          requires:
+            - parallel-job-1
+            - parallel-job-2
