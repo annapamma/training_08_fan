@@ -28,7 +28,8 @@ jobs:
         - run: docker build -t annacircleci/remotecachedemo:uniqueid-latest .
         - run: docker push annacircleci/remotecachedemo:uniqueid-latest
   with-machine: # if your build step passes, this will run
-    mac
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
       - setup_remote_docker:
