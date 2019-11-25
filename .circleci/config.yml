@@ -50,3 +50,5 @@ workflows:
     jobs:
       - follows-parallel-job-2:
           context: remotecachedemo
+      - with-machine:
+          context: remotecachedemo
