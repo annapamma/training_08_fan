@@ -16,8 +16,8 @@ jobs:
 #      - run: docker build -t annacircleci/remotecachedemo:uniqueid-builder .
 #      - run: docker push annacircleci/remotecachedemo:uniqueid-builder
   follows-parallel-job-2: # if your build step passes, this will run
-      machine:
-        image: ubuntu-1604:201903-01
+      macos:
+        xcode: "9.0"
       steps:
         - checkout
         - setup_remote_docker:
@@ -30,10 +30,9 @@ jobs:
   with-machine: # if your build step passes, this will run
     machine:
       image: ubuntu-1604:201903-01
+      docker_layer_caching: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run: |
           echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
       - run: docker pull annacircleci/remotecachedemo:uniqueid-builder
